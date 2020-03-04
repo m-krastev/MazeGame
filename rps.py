@@ -29,5 +29,5 @@ def key_pressed_RPS():
     elif playerinput == b'I' or playerinput == b'i':
         playerinput = "SCISSORS"
     else:
-        playerinput = "invalid key"
+        playerinput = choice(("ROCK","PAPER","SCISSORS"))
     return playerinput

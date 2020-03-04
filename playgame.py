@@ -86,7 +86,7 @@ class _Environment:
             row_str = row_str.replace("2", HERO_CHAR)  # replace the hero character
             row_str = row_str.replace("3", MONSTER_CHAR) #replace the monster char
             row_str = row_str.replace("4", GOBLIN_CHAR) #replace the goblin char
-            print("".join(row_str))
+            print("".join(row_str).replace(",",""))
 
     def print_monsters(self):
         for monster in self.monster_list:
@@ -147,6 +147,9 @@ class Game:
         return
 
     def win_check(self):
+        if self.myHero._health < 1:
+            print("Game Over! The Hero has died!")
+            return True
         flag = 0
         print("Monsters visited:\n[",end="")
         for monster in self.MyEnvironment.monster_list:
@@ -164,10 +167,6 @@ class Game:
             if userinput == "yes":
                 self.save_leaderboard()
                 self.show_leaderboard()
-            return True
-        if self.myHero._health < 1:
-            print("Game Over! The Hero died!")
-
             return True
         return False
 
@@ -199,6 +198,7 @@ class Game:
 
     def show_leaderboard(self):
         with open("leaderboards/leaderboard_{}.dat".format(self._difficulty),"r") as file:
+            print(DIVIDERS)
             print("Rank","Name", "Score", sep="\t")
             for index, line in enumerate(file):
                 line = line.strip()
@@ -243,8 +243,6 @@ class Game:
                 self.myHero.print_hero_status()
                 if self.win_check():
                     break
-                
-        self.show_leaderboard()
 
 if __name__ == "__main__":
     myGame = Game()

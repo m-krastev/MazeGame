@@ -29,7 +29,7 @@ class Hero:
         return self._coordX, self._coordY
 
     def print_hero_status(self):
-        print("HP:",self._health,"\nCoins:",self._coins)
+        print("HP:",str(self._health) + "/100","\nCoins:",self._coins,sep="\t")
 
     def move(self, environment):
         """move in the maze, it is noted this function may not work in the debug mode"""
