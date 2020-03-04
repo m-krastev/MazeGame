@@ -6,23 +6,25 @@ from maze_gen_recursive import make_maze_recursion
 from copy import deepcopy
 from random import randint
 from rps import rps
+from colorama import init, Fore
 import pickle
 
 MAZE_DIMENSION_X = 17
 MAZE_DIMENSION_Y = 17
 
-DIVIDERS = "============================================="
+DIVIDERS = "=========================================="
 
-WALL_CHAR = "\u25a0"
-SPACE_CHAR = " "
+WALL_CHAR = "#"      #"\u25a0"
+SPACE_CHAR = "-"     #" "
 HERO_CHAR = "H"
-MONSTER_CHAR = "M"
-GOBLIN_CHAR = "G"
+MONSTER_CHAR = u"\u001b[31mM\u001b[0m" #RED MONSTERS
+GOBLIN_CHAR = u"\u001b[32mG\u001b[0m"  #GREEN GOBLINS
 
-EASY_MODE = [[0.25, 100],[0.10,25],[30,100],    #MONSTER ATTRIBUTES
-            [0.33,150], [0.40,40],[50,180]]     #GOBLIN ATTRIBUTES
+
+EASY_MODE = [[0.25, 100],[0.10,25],[30,100],    #MONSTER ATTRIBUTES (thiefMonster,fighterMonster,gamerMonster)
+            [0.33,150], [0.40,40],[50,180]]     #GOBLIN ATTRIBUTES  (wealthGoblin,healerGoblin,gamerGoblin)
 NRML_MODE = [[0.33,200], [0.25,30], [40,200],
-             [0.25,250], [0.25,50], [60,400]]   #<-- this all could be added in the MODE array for less memory usage
+             [0.25,250], [0.25,50], [60,400]]   #<-- this all could be added in the MODE array for a bit of optimization
 HARD_MODE = [[0.50,300], [0.50,35], [50,400],
              [0.15,350], [0.20,40], [70,500]]
 MNST_MODE = [[0.75,400], [0.80,35], [60,500],
@@ -36,7 +38,7 @@ class _Environment:
         self._environment = deepcopy(maze)
         self.monster_list = []
         self.goblin_list = []
-        self.set_monster_goblin()
+        self.spawn_monster_goblin()
 
     def set_coord(self, x, y, val):
         self._environment[x][y] = val
@@ -44,7 +46,7 @@ class _Environment:
     def get_coord(self, x, y):
         return self._environment[x][y]
     
-    def set_monster_goblin(self):
+    def spawn_monster_goblin(self):
 
         for i in range(5):
             while True:
@@ -81,12 +83,12 @@ class _Environment:
         print(DIVIDERS)
         for row in self._environment:
             row_str = str(row)
-            row_str = row_str.replace("0", SPACE_CHAR)  # replace the space character
-            row_str = row_str.replace("1", WALL_CHAR)  # replace the wall character
-            row_str = row_str.replace("2", HERO_CHAR)  # replace the hero character
-            row_str = row_str.replace("3", MONSTER_CHAR) #replace the monster char
-            row_str = row_str.replace("4", GOBLIN_CHAR) #replace the goblin char
-            print("".join(row_str).replace(",",""))
+            row_str = row_str.replace("0", SPACE_CHAR)      # replace the space character
+            row_str = row_str.replace("1", WALL_CHAR)       # replace the wall character
+            row_str = row_str.replace("2", HERO_CHAR)       # replace the hero character
+            row_str = row_str.replace("3", MONSTER_CHAR)    # replace the monster char
+            row_str = row_str.replace("4", GOBLIN_CHAR)     # replace the goblin char
+            print("".join(row_str)) #print("".join(row_str).replace(",",""))
 
     def print_monsters(self):
         for monster in self.monster_list:
@@ -122,53 +124,21 @@ class _Environment:
         except Exception:
             pass
         return
-    
 
+    def quit_game(self):
+        try:
+            myGame.quit_game()
+        except Exception:
+            pass
+        return
 
 class Game:
-
     def __init__(self):
         self.myHero = Hero()
         self.maze = make_maze_recursion(MAZE_DIMENSION_X, MAZE_DIMENSION_Y)
         self.MyEnvironment = _Environment(self.maze)  # initial environment is the maze itself
         self._count = 0
         self._difficulty = 0
-
-    def save_game(self):
-        print("Saving game... ")
-        with open("game_save.dat","wb") as file:
-            pickle.dump([self.myHero,self.MyEnvironment,self._count,self._difficulty],file)
-        return
-
-    def load_game(self):
-        print("Loading game... ")
-        with open("game_save.dat","rb") as file:
-            self.myHero,self.MyEnvironment,self._Count,self._difficulty = pickle.load(file)
-        return
-
-    def win_check(self):
-        if self.myHero._health < 1:
-            print("Game Over! The Hero has died!")
-            return True
-        flag = 0
-        print("Monsters visited:\n[",end="")
-        for monster in self.MyEnvironment.monster_list:
-            if monster.is_met():
-                flag += 1
-                mon_x,mon_y = monster.return_coords()
-                self.MyEnvironment.set_coord(mon_x,mon_y,3)
-                print("1",end="; ")
-            else:
-                print("0",end="; ")
-        print(flag,"/5]",sep="")
-        if flag == 5:
-            print("Game beaten! Congratulations!")
-            userinput = input("Would you like to record your achievement in the leaderboard? Type \"yes\" to proceed... ")
-            if userinput == "yes":
-                self.save_leaderboard()
-                self.show_leaderboard()
-            return True
-        return False
 
     def new_game(self):
 
@@ -195,6 +165,45 @@ class Game:
 
         self.MyEnvironment.print_monsters()
         self.MyEnvironment.print_goblins()
+
+    def save_game(self):
+        print("Saving game... ")
+        with open("game_save.dat","wb") as file:
+            pickle.dump([self.myHero,self.MyEnvironment,self._count,self._difficulty],file)
+        return
+
+    def load_game(self):
+        print("Loading game... ")
+        with open("game_save.dat","rb") as file:
+            self.myHero,self.MyEnvironment,self._Count,self._difficulty = pickle.load(file)
+        return
+    
+    def quit_game(self):
+        quit()
+
+    def win_check(self):
+        if self.myHero._health < 1:
+            print("Game Over!\nThe Hero has died!\n")
+            return True
+        flag = 0
+        print("Monsters visited:\n[",end="")
+        for monster in self.MyEnvironment.monster_list:
+            if monster.is_met():
+                flag += 1
+                mon_x,mon_y = monster.return_coords()
+                self.MyEnvironment.set_coord(mon_x,mon_y,3)
+                print("1",end="; ")
+            else:
+                print("0",end="; ")
+        print(flag,"/5]",sep="")
+        if flag == 5:
+            print("Game beaten! Congratulations!")
+            userinput = input("Would you like to record your achievement in the leaderboard? Type \"yes\" to proceed... ")
+            if userinput == "yes":
+                self.save_leaderboard()
+                self.show_leaderboard()
+            return True
+        return False
 
     def show_leaderboard(self):
         with open("leaderboards/leaderboard_{}.dat".format(self._difficulty),"r") as file:

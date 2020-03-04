@@ -111,6 +111,7 @@ class Hero:
                 "Press Z to see the Monsters.\n"
                 "Press G to see the Goblins.\n"
                 "Press L to see the Leaderboard.\n"
+                "Press E to Quick Save and exit the game.\n"
                 "*You can also use the arrow keys for movement.\n"
             )
             return False
@@ -118,6 +119,9 @@ class Hero:
         elif ch2 == b'o' or ch2 == b'O':
             environment.print_environment()
             return False
+
+        elif ch2 == b'E' or ch2 == b'e':
+            environment.quit_game()
         return False
 
     def move_debug(self, environment):
