@@ -148,7 +148,7 @@ class Game:
             )
 
         self.set_difficulty(int(self._difficulty))
-    
+        """Sets difficulty for the game."""
         #Sets the initial position of the hero.
         while True:
             x = randint(2,MAZE_DIMENSION_X-2)
@@ -166,14 +166,14 @@ class Game:
     def save_game(self):
         """Saves the game to a pre-determined file."""
         print("Saving game... ")
-        with open("game_save.dat","wb") as file:
+        with open("game_data.dat","wb") as file:
             dump([self.myHero,self.MyEnvironment,self._count,self._difficulty],file)
         return
 
     def load_game(self):
         """Loads the game from a pre-determined file."""
         print("Loading game... ")
-        with open("game_save.dat","rb") as file:
+        with open("game_data.dat","rb") as file:
             self.myHero,self.MyEnvironment,self._Count,self._difficulty = load(file)
         return
     
@@ -254,6 +254,8 @@ class Game:
             self.load_game()
         if start == b"N":
             self.new_game()
+
+        self.MyEnvironment.print_environment()
 
         while True:
             if self.myHero.move(self.MyEnvironment):
