@@ -17,37 +17,28 @@ DIVIDERS = "=========================================="
 WALL_CHAR = "#"      #"\u25a0"
 SPACE_CHAR = "-"     #" "
 HERO_CHAR = "H"
-MONSTER_CHAR = u"\u001b[31mM\u001b[0m" #RED MONSTERS
-GOBLIN_CHAR = u"\u001b[32mG\u001b[0m"  #GREEN GOBLINS
-
-
-EASY_MODE = [[0.25, 100],[0.10,25],[30,100],    #MONSTER ATTRIBUTES (thiefMonster,fighterMonster,gamerMonster)
-            [0.33,150], [0.40,40],[50,180]]     #GOBLIN ATTRIBUTES  (wealthGoblin,healerGoblin,gamerGoblin)
-NRML_MODE = [[0.33,200], [0.25,30], [40,200],
-             [0.25,250], [0.25,50], [60,400]]   #<-- this all could be added in the MODE array for a bit of optimization
-HARD_MODE = [[0.50,300], [0.50,35], [50,400],
-             [0.15,350], [0.20,40], [70,500]]
-MNST_MODE = [[0.75,400], [0.80,35], [60,500],
-             [0.10,1200], [0.10,100], [80,800]]
-MODE = [EASY_MODE,NRML_MODE,HARD_MODE,MNST_MODE]
-
+MONSTER_CHAR = u"\u001b[31m"+"M"+u"\u001b[0m" #RED MONSTERS
+GOBLIN_CHAR = u"\u001b[32m"+"G"+u"\u001b[0m"  #GREEN GOBLINS
 
 class _Environment:
-    """Environment includes Maze+Monster+Goblin"""
+    """Environment includes the Maze, the Monsters, and the Goblins."""
     def __init__(self, maze):
         self._environment = deepcopy(maze)
         self.monster_list = []
         self.goblin_list = []
-        self.spawn_monster_goblin()
+        self.spawn_monsters_goblins()
 
     def set_coord(self, x, y, val):
+        """Assigns a type to the cell, denoted by the coordinates."""
         self._environment[x][y] = val
 
     def get_coord(self, x, y):
+        """Returns the type of the cell, denoted by the coordinates."""
         return self._environment[x][y]
     
-    def spawn_monster_goblin(self):
-
+    def spawn_monsters_goblins(self):
+        """Spawns monsters and goblins into the maze."""
+        #Spawns the monsters.
         for i in range(5):
             while True:
                 x = randint(2,MAZE_DIMENSION_X-2)
@@ -62,7 +53,7 @@ class _Environment:
                     else:
                         self.monster_list.append(gamerMonster(x,y))
                     break
-        
+        #Spawns the goblins.
         for i in range(5):
             while True:
                 x = randint(2,MAZE_DIMENSION_X-2)
@@ -77,9 +68,10 @@ class _Environment:
                     else:
                         self.goblin_list.append(gamerGoblin(x,y))
                     break
+        return
 
     def print_environment(self):
-        """print out the environment in the terminal"""
+        """Print out the environment (the maze) in the terminal."""
         print(DIVIDERS)
         for row in self._environment:
             row_str = str(row)
@@ -91,19 +83,15 @@ class _Environment:
             print("".join(row_str)) #print("".join(row_str).replace(",",""))
 
     def print_monsters(self):
+        """Returns a list of all the monsters in the maze."""
         for monster in self.monster_list:
             monster.bio()
             
     def print_goblins(self):
+        """Returns a list of all the goblins in the maze."""
         for goblin in self.goblin_list:
             goblin.bio()
-
-    def set_difficulty(self,mode):
-        for monster in self.monster_list:
-            monster.set_parameters(mode)
-        for goblin in self.goblin_list:
-            goblin.set_parameters(mode)
-
+    #The following functions exist for the sake of access inside the Hero controls.
     def save_game(self):
         try:
             myGame.save_game()
@@ -139,22 +127,30 @@ class Game:
         self.MyEnvironment = _Environment(self.maze)  # initial environment is the maze itself
         self._count = 0
         self._difficulty = 0
+        
+    def set_difficulty(self, difficulty):
+        """Sets the difficulty of the game."""
+        for monster in self.MyEnvironment.monster_list:
+            monster.set_parameters(difficulty)
+        for goblin in self.MyEnvironment.goblin_list:
+            goblin.set_parameters(difficulty)
 
     def new_game(self):
+        """Initiates a new game of Maze."""
 
-        print("Game start!")
+        print("Game start!\n")
 
-        self._difficulty = input("Choose your level of difficulty:\n"
+        self._difficulty = input("Difficulties:\n"
             "Easy (0): Monsters are weak and have low chance of attacking you, low risks. Goblins are generous and reliable.\n"
             "Normal (1): Monsters are dangerous and can attack you, medium risk. Goblins are more generous, but less often.\n"
             "Hard (2): Monsters are highly aggressive and will harm you, high risk. Goblins are wealthy, but will seldom show you kindness.\n"
             "Monster (3): Successive monster encounters can kill you. Goblins will reward you handsomely if they take a liking in you, but this will probably not happen.\n"
+            "Choose your mode: "
             )
 
-        self.MyEnvironment.set_difficulty(MODE[int(self._difficulty)])
+        self.set_difficulty(int(self._difficulty))
     
         #Sets the initial position of the hero.
-
         while True:
             x = randint(2,MAZE_DIMENSION_X-2)
             y = randint(2,MAZE_DIMENSION_Y-2)
@@ -162,41 +158,51 @@ class Game:
                 self.MyEnvironment.set_coord(x,y,2)
                 self.myHero.set_coord(x,y)
                 break
-
+        #Informs the player of the positions of the mobs in the game.
         self.MyEnvironment.print_monsters()
         self.MyEnvironment.print_goblins()
 
     def save_game(self):
+        """Saves the game to a pre-determined file."""
         print("Saving game... ")
         with open("game_save.dat","wb") as file:
             pickle.dump([self.myHero,self.MyEnvironment,self._count,self._difficulty],file)
         return
 
     def load_game(self):
+        """Loads the game from a pre-determined file. File must NOT be empty."""
         print("Loading game... ")
         with open("game_save.dat","rb") as file:
             self.myHero,self.MyEnvironment,self._Count,self._difficulty = pickle.load(file)
         return
     
     def quit_game(self):
+        """"Stops the program."""
+        print("Quitting the game...")
+        self.save_game()
         quit()
 
     def win_check(self):
+        """Determines whether the player has reached a winning or losing condition."""
         if self.myHero._health < 1:
             print("Game Over!\nThe Hero has died!\n")
             return True
+
         flag = 0
+
         print("Monsters visited:\n[",end="")
         for monster in self.MyEnvironment.monster_list:
             if monster.is_met():
                 flag += 1
                 mon_x,mon_y = monster.return_coords()
-                self.MyEnvironment.set_coord(mon_x,mon_y,3)
-                print("1",end="; ")
+                self.MyEnvironment.set_coord(mon_x,mon_y,3) #Reassigns monster coordinates, this is done because of poorly designed code 
+                print("1",end="; ")                         #that would otherwise move the position of the monster with the hero.
             else:
                 print("0",end="; ")
         print(flag,"/5]",sep="")
+
         if flag == 5:
+            #If game is beaten, prompts the user to record their name in the Hall of Fame for the difficulty.
             print("Game beaten! Congratulations!")
             userinput = input("Would you like to record your achievement in the leaderboard? Type \"yes\" to proceed... ")
             if userinput == "yes":
@@ -206,6 +212,7 @@ class Game:
         return False
 
     def show_leaderboard(self):
+        """Shows the leaderboard for the given difficulty."""
         with open("leaderboards/leaderboard_{}.dat".format(self._difficulty),"r") as file:
             print(DIVIDERS)
             print("Rank","Name", "Score", sep="\t")
@@ -218,6 +225,7 @@ class Game:
         return
 
     def save_leaderboard(self):
+        """Saves the leaderboard for the given difficulty."""
         inserted = False
         name = input("Name yourself adventurer, your deeds will be passed down in history: ")
         with open("leaderboards/leaderboard_{}.dat".format(self._difficulty),"r+") as file:
@@ -235,8 +243,10 @@ class Game:
         return
 
     def play(self):
-
+        """Main function for playing the game."""
+        #First prompts the user whether they want to load from the last saved file or start a new game.
         print("Hello World! Press L to load from your last game or N to start a New Game... ")
+
         start = getch()
         if start == b"L" or start == b'l':
             self.load_game()

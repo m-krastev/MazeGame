@@ -7,7 +7,7 @@ from random import random, choice
 import rps
 
 class Monster:
-    """define your monster class here"""
+    """Parent monster class."""
     def __init__(self, x, y):
         self._coordX = x
         self._coordY = y
@@ -15,33 +15,36 @@ class Monster:
         return
 
     def meet_monster(self):
+        """Meet monster. Turns the flag on."""
         self._flag = True
 
     def is_met(self):
+        """Returns the flag of the monster."""
         return self._flag
 
     def return_coords(self):
+        """Returns the coordinates of the monster."""
         return self._coordX, self._coordY
 
-    def interact(self,Hero):
-        return
-
-
 class thiefMonster(Monster):
+    """Thief monster will steal coins from the Hero with a predefined probability."""
     def __init__(self,x,y,chance = 0,stolen = 0):
         Monster.__init__(self,x,y)
         self._chance = chance
         self._stolen = stolen
     
     def set_parameters(self, mode):
-        self._chance = mode[0][0]
-        self._stolen = mode[0][1]
+        """Sets parameters according to a pre-defined array in playgame.py"""
+        difficulty = [[0.25, 100], [0.33,200], [0.50,300], [0.75,400]] #EASY, NORMAL, HARD, MONSTER
+        self._chance = difficulty[mode][0]
+        self._stolen = difficulty[mode][1]
     
     def bio(self):
+        """Prints a short description of the monster."""
         print("thief monster at coords (", self._coordX,",",self._coordY,") with attributes (", self._chance, ",", self._stolen,")",sep="")
     
-    def interact(self, Hero):
-        """fight with monsters"""
+    def fight(self, Hero):
+        """Establishes the interaction that will happen between the Hero and the Monster."""
         self.meet_monster()
         print("You met a ",end="")
         self.bio()
@@ -54,20 +57,24 @@ class thiefMonster(Monster):
             return
 
 class fighterMonster(Monster):
+    """Fighter monster will reduce the Hero's health with a predefined probability."""
     def __init__(self,x,y,chance = 0,health_reduced = 0):
         Monster.__init__(self,x,y)
         self._chance = chance
         self._health_reduced = health_reduced
     
     def set_parameters(self, mode):
-        self._chance = mode[1][0]
-        self._health_reduced = mode[1][1]
+        """Sets parameters according to a pre-defined array in playgame.py"""
+        difficulty = [[0.10,25],[0.25,30],[0.50,35],[0.80,40]] #EASY, NORMAL, HARD, MONSTER
+        self._chance = difficulty[mode][0]
+        self._health_reduced = difficulty[mode][1]
     
     def bio(self):
+        """Prints a short description of the monster."""
         print("fighter monster at coords (", self._coordX,",",self._coordY,") with attributes (", self._chance, ",", self._health_reduced,")",sep="")
     
-    def interact(self,Hero):
-        """fight with monsters"""
+    def fight(self,Hero):
+        """Establishes the interaction that will happen between the Hero and the Monster."""
         self.meet_monster()
         print("You met a ",end="")
         self.bio()
@@ -79,20 +86,24 @@ class fighterMonster(Monster):
             return
 
 class gamerMonster(Monster):
+    """Gamer monster will play a game with the hero and will not harm the hero if the hero wins. Otherwise, it will steal coins and reduce Hero's health."""
     def __init__(self,x,y,health_reduced = 0,stolen = 0):
         Monster.__init__(self,x,y)
         self._health_reduced = health_reduced
         self._gold_stolen = stolen
     
     def set_parameters(self, mode):
-        self._health_reduced = mode[2][0]
-        self._gold_stolen = mode[2][1]
+        """Sets parameters according to a pre-defined array in playgame.py"""
+        difficulty = [[30,100],[40,200],[50,400],[60,800]]
+        self._health_reduced = difficulty[mode][0]
+        self._gold_stolen = difficulty[mode][1]
     
     def bio(self):
+        """Prints a short description of the monster."""
         print("gamer monster at coords (", self._coordX,",",self._coordY,") with attributes (", self._health_reduced, ",", self._gold_stolen,")",sep="")
     
-    def interact(self,Hero):
-        """fight with monsters"""
+    def fight(self,Hero):
+        """Establishes the interaction that will happen between the Hero and the Monster."""
         self.meet_monster()
         print("You met a ",end="")
         self.bio()

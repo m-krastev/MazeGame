@@ -6,7 +6,6 @@
 
 from getch1 import *
 from random import choice
-
 def rps(player1Input, player2Input):
     '''Calculates results of a game of Rock-Paper-Scissors, assumes correct values'''
     if player1Input == player2Input:
@@ -21,6 +20,7 @@ def rps(player1Input, player2Input):
     return -1
 
 def key_pressed_RPS():
+    """Normalizes input for a game of Rock-Paper-Scissors."""
     playerinput = getch()
     if playerinput == b'R' or playerinput == b'r':
         playerinput = "ROCK"

@@ -7,37 +7,35 @@ from random import random, choice
 import rps
 
 class Goblin:
+    """Parent goblin class."""
     def __init__(self,x,y):
         self._coordX = x
         self._coordY = y
         return
-
-    def meet_goblin(self):
-        pass
     
     def return_coords(self):
+        """Returns the coordinates of the goblin."""
         return self._coordX, self._coordY
-    
-    def bio(self):
-        print("default goblin")
-
-    def interact(self, Hero):
-        return
 
 class wealthGoblin(Goblin):
-    def __init__(self,x,y,chance = 0.25,gift = 40):
+    """Wealth goblin will reward the hero with a certain probability."""
+    def __init__(self,x,y):
         Goblin.__init__(self, x ,y)
-        self._chance = chance
-        self._gift = gift
+        self._chance = 0
+        self._gift = 0
     
     def set_parameters(self, mode):
-        self._chance = mode[3][0]
-        self._gift = mode[3][1]
+        """Sets parameters according to a pre-defined array in playgame.py"""
+        difficulty = [[0.33,150], [0.25,300], [0.15,500], [0.10,1200]]
+        self._chance = difficulty[mode][0]
+        self._gift = difficulty[mode][1]
 
     def bio(self):
+        """Prints a short description of the goblins."""
         print("wealth goblin at coords (", self._coordX,",",self._coordY,") with attributes (", self._chance, ",", self._gift,")",sep="")
 
     def interact(self,Hero):
+        """Establishes the interaction that will happen when the Hero meets the Goblin."""
         self.meet_goblin()
         print("You met a ",end="")
         self.bio()
@@ -52,19 +50,24 @@ class wealthGoblin(Goblin):
 
 
 class healthGoblin(Goblin):
-    def __init__(self,x,y,chance = 0.5,health_restored = 20):
+    """Health goblin will restore the Hero's HP with a certain probability"""
+    def __init__(self,x,y):
         Goblin.__init__(self, x ,y)
-        self._chance = chance
-        self._health_restored = health_restored
+        self._chance = 0
+        self._health_restored = 0
 
     def set_parameters(self, mode):
-        self._chance = mode[4][0]
-        self._health_restored = mode[4][1]
+        """Sets parameters according to a pre-defined array in playgame.py"""
+        difficulty = [[0.40,40],[0.25,50],[0.20,40],[0.10,100]]
+        self._chance = difficulty[mode][0]
+        self._health_restored = difficulty[mode][1]
 
     def bio(self):
+        """Prints a short description of the goblins."""
         print("health goblin at coords (", self._coordX,",",self._coordY,") with attributes (", self._chance, ",", self._health_restored,")",sep="")
     
     def interact(self,Hero):
+        """Establishes the interaction that will happen when the Hero meets the Goblin."""
         self.meet_goblin()
         print("You met a ",end="")
         self.bio()
@@ -78,19 +81,24 @@ class healthGoblin(Goblin):
 
 
 class gamerGoblin(Goblin):
-    def __init__(self,x,y,health_restored = 30, gift = 150):
-        Goblin.__init__(self, x ,y)
-        self._health_restored = health_restored
-        self._gift = gift
+    """Gamer goblin will play a game with the Hero and if the Hero wins, he will be rewarded by the goblin with more HP and coins. Otherwise, Hero will not receive anything."""
+    def __init__(self,x,y):
+        Goblin.__init__(self, x, y)
+        self._health_restored = 0
+        self._gift = 0
 
     def set_parameters(self, mode):
-        self._gift = mode[5][1]
-        self._health_restored = mode[5][0]
+        """Sets parameters according to a pre-defined array in playgame.py"""
+        difficulty = [[180,50],[400,60],[500,70],[800,80]]
+        self._gift = difficulty[mode][0]
+        self._health_restored = difficulty[mode][1]
 
     def bio(self):
+        """Prints a short description of the goblins."""
         print("gamer goblin at coords (", self._coordX,",",self._coordY,") with attributes (", self._gift, ",", self._health_restored,")",sep="")
     
     def interact(self,Hero):
+        """Establishes the interaction that will happen when the Hero meets the Goblin."""
         self.meet_goblin()
         print("You met a ",end="")
         self.bio()

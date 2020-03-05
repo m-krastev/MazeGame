@@ -13,31 +13,34 @@ clear = lambda: os.system('cls') #clear screen
 
 class Hero:
     """Hero class with 100 health and 1000 coins by default."""
-    def __init__(self, x = 2, y = 2):
-        """set the coordinate of the hero in the maze"""
-        self._coordX = x
-        self._coordY = y
+    def __init__(self):
+        """Set the coordinate of the hero in the maze."""
+        self._coordX = 0
+        self._coordY = 0
         self._health = 100
-        self._coins = 1000  # gold coins the hero have.
-        #self._gem=3 #what is this?
+        self._coins = 1000
+        #self._gem=3    #Seems to be irrelevant, commented out.
  
     def set_coord(self,x,y):
+        """Sets the coordinates of the hero."""
         self._coordX = x
         self._coordY = y
     
     def return_coords(self):
+        """Returns the coordinates of the hero."""
         return self._coordX, self._coordY
 
     def print_hero_status(self):
+        """Prints status of the hero in terms of total HP and gold coins."""
         print("HP:",str(self._health) + "/100","\nCoins:",self._coins,sep="\t")
 
     def move(self, environment):
-        """move in the maze, it is noted this function may not work in the debug mode"""
+        """Move in the maze, it is noted this function may not work in the debug mode."""
         x, y = self.return_coords() #coords that will be changed
-        last_coords = (x,y)
-        ch2 = getch()
+        last_coords = (x,y)         #stores last coordinates
+        ch2 = getch().upper()
         clear()
-        if ch2 == b'H' or ch2 == "A" or ch2 == b'W' or ch2 == b'w':
+        if ch2 == b'H' or ch2 == "A" or ch2 == b'W':
             # the up arrow key was pressed
             print ("up key pressed")
             x-=1            
@@ -46,7 +49,7 @@ class Hero:
             else:
                 return False
 
-        elif ch2 == b'P' or ch2 == "B" or ch2 == b'S' or ch2 == b's':
+        elif ch2 == b'P' or ch2 == "B" or ch2 == b'S':
             # the down arrow key was pressed
             print("down key pressed")
             x+=1
@@ -55,7 +58,7 @@ class Hero:
             else:
                 return False
 
-        elif ch2 == b'K' or ch2 == "D" or ch2 == b'A' or ch2 == b'a':
+        elif ch2 == b'K' or ch2 == "D" or ch2 == b'A':
             # the left arrow key was pressed
             print("left key pressed")
             y-=1
@@ -64,7 +67,7 @@ class Hero:
             else:
                 return False
 
-        elif ch2 == b'M' or ch2 == "C" or ch2 == b'D' or ch2 == b'd':
+        elif ch2 == b'M' or ch2 == "C" or ch2 == b'D':
             # the right arrow key was pressed
             print("right key pressed")
             y+=1
@@ -73,31 +76,38 @@ class Hero:
             else:
                 return False
 
-        elif ch2 == b'z' or ch2 == b'Z':
+        elif ch2 == b'Z':
+            #Print monster coordinates and attributes.
             environment.print_monsters()
             return False
             
-        elif ch2 == b'g' or ch2 == b'G':
+        elif ch2 == b'G':
+            #Print goblin coordinates and attributes.
             environment.print_goblins()
             return False
 
-        elif ch2 == b'q' or ch2 == b'Q':
+        elif ch2 == b'Q':
+            #Save the game.
             environment.save_game()
             return False
 
-        elif ch2 == b'r' or ch2 == b'R':
+        elif ch2 == b'R':
+            #Load from last checkpoint.
             environment.load_game()
             return False
 
-        elif ch2 == b'l' or ch2 == b'L':
+        elif ch2 == b'L':
+            #Shows leaderboard.
             environment.show_leaderboard()
             return False
 
-        elif ch2 == b'y' or ch2 == b'Y':
-            print("Hero has",self._health,"left and",self._coins,"coins available!")
+        elif ch2 == b'Y':
+            #Displays hero status.
+            self.print_hero_status()
             return False
 
-        elif ch2 == b'I' or ch2 == b'i':
+        elif ch2 == b'I':
+            #Prints helpful instructions for the user.
             print(
                 "Press W for forward movement.\n"
                 "Press S for backward movement.\n"
@@ -116,15 +126,17 @@ class Hero:
             )
             return False
 
-        elif ch2 == b'o' or ch2 == b'O':
+        elif ch2 == b'O':
+            #Displays the map for the user.
             environment.print_environment()
             return False
 
-        elif ch2 == b'E' or ch2 == b'e':
+        elif ch2 == b'E':
+            #Exits the game.
             environment.quit_game()
         return False
 
-    def move_debug(self, environment):
+    '''def move_debug(self, environment):
 
         """move in the maze, you need to press the enter key after keying in
         direction, and this works in the debug mode"""
@@ -152,6 +164,7 @@ class Hero:
             return True
 
         return False 
+        '''
 
     def event_check(self, last_coords, x, y, environment):
         current_coord_type = environment.get_coord(x,y)
@@ -173,7 +186,7 @@ class Hero:
                         environment.set_coord(last_coords[0],last_coords[1],0)
                         environment.set_coord(x,y,2)
                         self.set_coord(x,y)
-                        monster.interact(self)
+                        monster.fight(self)
                         return True
             elif current_coord_type == 4: #checks whether a goblin is encountered
                 for goblin in environment.goblin_list:
@@ -183,4 +196,4 @@ class Hero:
                         self.set_coord(x,y) #saves the position of the hero
                         goblin.interact(self)
                         return True
-            return
+        return
