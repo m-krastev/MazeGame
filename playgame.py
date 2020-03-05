@@ -6,8 +6,7 @@ from maze_gen_recursive import make_maze_recursion
 from copy import deepcopy
 from random import randint
 from rps import rps
-from colorama import init, Fore
-import pickle
+from pickle import dump, load
 
 MAZE_DIMENSION_X = 17
 MAZE_DIMENSION_Y = 17
@@ -95,36 +94,36 @@ class _Environment:
     def save_game(self, game):
         try:
             myGame.save_game()
-        except Exception:
+        except:
             pass
         return
 
     def load_game(self):
         try:
             myGame.load_game()
-        except Exception:
+        except:
             pass
         return
 
     def show_leaderboard(self):
         try:
             myGame.show_leaderboard()
-        except Exception:
+        except:
             pass
         return
 
     def quit_game(self):
         try:
             myGame.quit_game()
-        except Exception:
+        except:
             pass
         return
 
 class Game:
     def __init__(self):
+        """Initalises Hero, maze environment, count for the number of turns, and a level of difficulty automatically."""
         self.myHero = Hero()
-        self.maze = make_maze_recursion(MAZE_DIMENSION_X, MAZE_DIMENSION_Y)
-        self.MyEnvironment = _Environment(self.maze)  # initial environment is the maze itself
+        self.MyEnvironment = _Environment(make_maze_recursion(MAZE_DIMENSION_X, MAZE_DIMENSION_Y))  # initial environment is the maze itself
         self._count = 0
         self._difficulty = 0
         
@@ -162,18 +161,20 @@ class Game:
         self.MyEnvironment.print_monsters()
         self.MyEnvironment.print_goblins()
 
+        self.save_game() #Saves the initial position at initialization.
+
     def save_game(self):
         """Saves the game to a pre-determined file."""
         print("Saving game... ")
         with open("game_save.dat","wb") as file:
-            pickle.dump([self.myHero,self.MyEnvironment,self._count,self._difficulty],file)
+            dump([self.myHero,self.MyEnvironment,self._count,self._difficulty],file)
         return
 
     def load_game(self):
-        """Loads the game from a pre-determined file. File must NOT be empty."""
+        """Loads the game from a pre-determined file."""
         print("Loading game... ")
         with open("game_save.dat","rb") as file:
-            self.myHero,self.MyEnvironment,self._Count,self._difficulty = pickle.load(file)
+            self.myHero,self.MyEnvironment,self._Count,self._difficulty = load(file)
         return
     
     def quit_game(self):
@@ -244,13 +245,14 @@ class Game:
 
     def play(self):
         """Main function for playing the game."""
+
         #First prompts the user whether they want to load from the last saved file or start a new game.
         print("Hello World! Press L to load from your last game or N to start a New Game... ")
 
-        start = getch()
-        if start == b"L" or start == b'l':
+        start = getch().upper()
+        if start == b"L":
             self.load_game()
-        if start == b"N" or start == b'n':
+        if start == b"N":
             self.new_game()
 
         while True:

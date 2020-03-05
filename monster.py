@@ -1,7 +1,3 @@
-#  Author: CS1527 Course Team
-#  Date: 9 January 2020
-#  Version: 1.0
-
 from getch1 import *
 from random import random, choice
 import rps
@@ -107,11 +103,13 @@ class gamerMonster(Monster):
         self.meet_monster()
         print("You met a ",end="")
         self.bio()
+
         print("The monster has demanded you play rock-paper-scissors,\nor you will not escape! Press a key to make your move! (R/P/I):")
         playerinput = rps.key_pressed_RPS()
         npcinput = choice(("ROCK","PAPER","SCISSORS"))
         print("You played", playerinput, "while the monster played", npcinput)
         result = rps.rps(playerinput,npcinput)
+
         while result == 0:
             print("It's a draw! Play again with: ")
             playerinput = rps.key_pressed_RPS()
@@ -119,8 +117,7 @@ class gamerMonster(Monster):
             print("You played", playerinput, "while the monster played", npcinput)
             result = rps.rps(playerinput,npcinput)
         if result == 1:
-            print("You won!")
-            print("You escaped the monster safely!")
+            print("You won and escaped the monster safely!")
             return
         else:
             Hero._health -= self._health_reduced

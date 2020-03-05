@@ -1,7 +1,3 @@
-#  Author: CS1527 Course Team
-#  Date: 9 January 2020
-#  Version: 1.0
-
 from getch1 import *
 from random import random, choice
 import rps
@@ -36,7 +32,7 @@ class wealthGoblin(Goblin):
 
     def interact(self,Hero):
         """Establishes the interaction that will happen when the Hero meets the Goblin."""
-        self.meet_goblin()
+        
         print("You met a ",end="")
         self.bio()
         if(random() < self._chance):
@@ -67,7 +63,7 @@ class healthGoblin(Goblin):
     
     def interact(self,Hero):
         """Establishes the interaction that will happen when the Hero meets the Goblin."""
-        self.meet_goblin()
+        
         print("You met a ",end="")
         self.bio()
         if(random() < self._chance):
@@ -97,14 +93,16 @@ class gamerGoblin(Goblin):
     
     def interact(self,Hero):
         """Establishes the interaction that will happen when the Hero meets the Goblin."""
-        self.meet_goblin()
+        
         print("You met a ",end="")
         self.bio()
         print("The goblin insists you play rock-paper-scissors\nwith him so that he will reward you! Press a key to make your move! (R/P/I):")
+        
         playerinput = rps.key_pressed_RPS()
         npcinput = choice(("ROCK","PAPER","SCISSORS"))
         print("You played", playerinput, "while the goblin played", npcinput)
         result = rps.rps(playerinput,npcinput)
+
         while result == 0:
             print("It's a draw! Play again with: ")
             playerinput = rps.key_pressed_RPS()
@@ -112,10 +110,9 @@ class gamerGoblin(Goblin):
             print("You played", playerinput, "while the goblin played", npcinput)
             result = rps.rps(playerinput,npcinput)
         if result == 1:
-            print("You won!")
             Hero._health += self._health_restored
             Hero._coins += self._gift
-            print("The goblin wants to reward you! He gave you",self._gift,"coins and restored your HP by",self._health_restored,"points!")
+            print("You won! The goblin wants to reward you! He gave you",self._gift,"coins and restored your HP by",self._health_restored,"points!")
             return
         else:
             print("The goblin won! You will not be rewarded.")

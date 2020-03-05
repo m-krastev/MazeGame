@@ -1,7 +1,3 @@
-#  Author: CS1527 Course Team
-#  Date: 9 January 2020
-#  Version: 1.0
-
 from getch1 import *
 import sys
 import os
@@ -35,43 +31,43 @@ class Hero:
         print("HP:",str(self._health) + "/100","\nCoins:",self._coins,sep="\t")
 
     def move(self, environment):
-        """Move in the maze, it is noted this function may not work in the debug mode."""
+        """Move in the maze and act depending on the landing coordinate type."""
         x, y = self.return_coords() #coords that will be changed
         last_coords = (x,y)         #stores last coordinates
         ch2 = getch().upper()
         clear()
-        if ch2 == b'H' or ch2 == "A" or ch2 == b'W':
+        if ch2 == b'H' or ch2 == b"W":
             # the up arrow key was pressed
             print ("up key pressed")
-            x-=1            
-            if(self.event_check(last_coords, x, y, environment)):
+            x -= 1            
+            if self.event_check(last_coords, x, y, environment):
                 return True
             else:
                 return False
 
-        elif ch2 == b'P' or ch2 == "B" or ch2 == b'S':
+        elif ch2 == b'P' or ch2 == b'S':
             # the down arrow key was pressed
             print("down key pressed")
-            x+=1
-            if(self.event_check(last_coords, x, y, environment)):
+            x += 1
+            if self.event_check(last_coords, x, y, environment):
                 return True
             else:
                 return False
 
-        elif ch2 == b'K' or ch2 == "D" or ch2 == b'A':
+        elif ch2 == b'K' or ch2 == b'A':
             # the left arrow key was pressed
             print("left key pressed")
-            y-=1
-            if(self.event_check(last_coords, x, y, environment)):
+            y -= 1
+            if self.event_check(last_coords, x, y, environment):
                 return True
             else:
                 return False
 
-        elif ch2 == b'M' or ch2 == "C" or ch2 == b'D':
+        elif ch2 == b'M' or ch2 == b'D':
             # the right arrow key was pressed
             print("right key pressed")
-            y+=1
-            if(self.event_check(last_coords, x, y, environment)):
+            y += 1
+            if self.event_check(last_coords, x, y, environment):
                 return True
             else:
                 return False
@@ -115,13 +111,13 @@ class Hero:
                 "Press D for rightward movement.\n" 
                 "Press Y for Hero status\n"
                 "Press I for Instructions.\n"
-                "Press O to see the Map.\n"
+                "Press O to Open the Map.\n"
                 "Press Q to Quick Save the game.\n"
-                "Press R to reload from last savepoint.\n"
+                "Press R to Reload from last savepoint.\n"
                 "Press Z to see the Monsters.\n"
                 "Press G to see the Goblins.\n"
-                "Press L to see the Leaderboard.\n"
-                "Press E to Quick Save and exit the game.\n"
+                "Press L to see the current Leaderboard.\n"
+                "Press E to Quick Save and Exit the game.\n"
                 "*You can also use the arrow keys for movement.\n"
             )
             return False
