@@ -92,7 +92,7 @@ class _Environment:
         for goblin in self.goblin_list:
             goblin.bio()
     #The following functions exist for the sake of access inside the Hero controls.
-    def save_game(self):
+    def save_game(self, game):
         try:
             myGame.save_game()
         except Exception:
@@ -178,8 +178,8 @@ class Game:
     
     def quit_game(self):
         """"Stops the program."""
-        print("Quitting the game...")
         self.save_game()
+        print("Quitting the game...")
         quit()
 
     def win_check(self):

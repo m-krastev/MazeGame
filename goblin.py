@@ -44,7 +44,6 @@ class wealthGoblin(Goblin):
             print("The goblin has gifted you with",self._gift,"coins!")
             return
         print("You have parted ways with the goblin...")
-        del self
         return
         
 
@@ -76,7 +75,6 @@ class healthGoblin(Goblin):
             print("The goblin healed",self._health_restored,"HP for you!")
             return
         print("You have parted ways with the goblin...")
-        del self
         return
 
 
@@ -121,5 +119,4 @@ class gamerGoblin(Goblin):
             return
         else:
             print("The goblin won! You will not be rewarded.")
-        del self
         return
