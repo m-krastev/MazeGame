@@ -38,7 +38,28 @@ class _Environment:
     def spawn_monsters_goblins(self):
         """Spawns monsters and goblins into the maze."""
         #Spawns the monsters.
-        for i in range(5):
+        while True:
+            x = randint(2,MAZE_DIMENSION_X-2)
+            y = randint(2,MAZE_DIMENSION_Y-2)
+            if not self.get_coord(x,y):
+                self.set_coord(x,y,3)
+                self.monster_list.append(thiefMonster(x,y))
+                break
+        while True:
+            x = randint(2,MAZE_DIMENSION_X-2)
+            y = randint(2,MAZE_DIMENSION_Y-2)
+            if not self.get_coord(x,y):
+                self.set_coord(x,y,3)
+                self.monster_list.append(fighterMonster(x,y))
+                break
+        while True:
+            x = randint(2,MAZE_DIMENSION_X-2)
+            y = randint(2,MAZE_DIMENSION_Y-2)
+            if not self.get_coord(x,y):
+                self.set_coord(x,y,3)
+                self.monster_list.append(gamerMonster(x,y))
+                break
+        for i in range(2):
             while True:
                 x = randint(2,MAZE_DIMENSION_X-2)
                 y = randint(2,MAZE_DIMENSION_Y-2)
@@ -53,7 +74,28 @@ class _Environment:
                         self.monster_list.append(gamerMonster(x,y))
                     break
         #Spawns the goblins.
-        for i in range(5):
+        while True:
+            x = randint(2,MAZE_DIMENSION_X-2)
+            y = randint(2,MAZE_DIMENSION_Y-2)
+            if not self.get_coord(x,y):
+                self.set_coord(x,y,4)
+                self.goblin_list.append(wealthGoblin(x,y))
+                break
+        while True:
+            x = randint(2,MAZE_DIMENSION_X-2)
+            y = randint(2,MAZE_DIMENSION_Y-2)
+            if not self.get_coord(x,y):
+                self.set_coord(x,y,4)
+                self.goblin_list.append(healthGoblin(x,y))
+                break
+        while True:
+            x = randint(2,MAZE_DIMENSION_X-2)
+            y = randint(2,MAZE_DIMENSION_Y-2)
+            if not self.get_coord(x,y):
+                self.set_coord(x,y,4)
+                self.goblin_list.append(gamerGoblin(x,y))
+                break
+        for i in range(2):
             while True:
                 x = randint(2,MAZE_DIMENSION_X-2)
                 y = randint(2,MAZE_DIMENSION_Y-2)
