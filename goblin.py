@@ -32,7 +32,6 @@ class wealthGoblin(Goblin):
 
     def interact(self,Hero):
         """Establishes the interaction that will happen when the Hero meets the Goblin."""
-        
         print("You met a ",end="")
         self.bio()
         if(random() < self._chance):
@@ -63,7 +62,6 @@ class healthGoblin(Goblin):
     
     def interact(self,Hero):
         """Establishes the interaction that will happen when the Hero meets the Goblin."""
-        
         print("You met a ",end="")
         self.bio()
         if(random() < self._chance):
@@ -93,7 +91,6 @@ class gamerGoblin(Goblin):
     
     def interact(self,Hero):
         """Establishes the interaction that will happen when the Hero meets the Goblin."""
-        
         print("You met a ",end="")
         self.bio()
         print("The goblin insists you play rock-paper-scissors\nwith him so that he will reward you! Press a key to make your move! (R/P/I):")

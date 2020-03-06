@@ -24,10 +24,10 @@ class Monster:
 
 class thiefMonster(Monster):
     """Thief monster will steal coins from the Hero with a predefined probability."""
-    def __init__(self,x,y,chance = 0,stolen = 0):
+    def __init__(self,x,y):
         Monster.__init__(self,x,y)
-        self._chance = chance
-        self._stolen = stolen
+        self._chance = 0
+        self._stolen = 0
     
     def set_parameters(self, mode):
         """Sets parameters according to a pre-defined array in playgame.py"""
@@ -54,10 +54,10 @@ class thiefMonster(Monster):
 
 class fighterMonster(Monster):
     """Fighter monster will reduce the Hero's health with a predefined probability."""
-    def __init__(self,x,y,chance = 0,health_reduced = 0):
+    def __init__(self,x,y):
         Monster.__init__(self,x,y)
-        self._chance = chance
-        self._health_reduced = health_reduced
+        self._chance = 0
+        self._health_reduced = 0
     
     def set_parameters(self, mode):
         """Sets parameters according to a pre-defined array in playgame.py"""
@@ -83,10 +83,10 @@ class fighterMonster(Monster):
 
 class gamerMonster(Monster):
     """Gamer monster will play a game with the hero and will not harm the hero if the hero wins. Otherwise, it will steal coins and reduce Hero's health."""
-    def __init__(self,x,y,health_reduced = 0,stolen = 0):
+    def __init__(self,x,y):
         Monster.__init__(self,x,y)
-        self._health_reduced = health_reduced
-        self._gold_stolen = stolen
+        self._health_reduced = 0
+        self._gold_stolen = 0
     
     def set_parameters(self, mode):
         """Sets parameters according to a pre-defined array in playgame.py"""
