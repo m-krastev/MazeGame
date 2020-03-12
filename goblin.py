@@ -52,7 +52,7 @@ class healthGoblin(Goblin):
 
     def set_parameters(self, mode):
         """Sets parameters according to a pre-defined array in playgame.py"""
-        difficulty = [[0.40,40],[0.25,50],[0.20,40],[0.10,100]]
+        difficulty = [[0.40,40],[0.25,50],[0.20,60],[0.10,100]]
         self._chance = difficulty[mode][0]
         self._health_restored = difficulty[mode][1]
 

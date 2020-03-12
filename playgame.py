@@ -13,8 +13,8 @@ MAZE_DIMENSION_Y = 17
 
 DIVIDERS = "=========================================="
 
-WALL_CHAR = "#"      #"\u25a0"
-SPACE_CHAR = "-"     #" "
+WALL_CHAR = "\u25a0"
+SPACE_CHAR = " "
 HERO_CHAR = "H"
 MONSTER_CHAR = u"\u001b[31m"+"M"+u"\u001b[0m" #RED MONSTERS
 GOBLIN_CHAR = u"\u001b[32m"+"G"+u"\u001b[0m"  #GREEN GOBLINS
@@ -121,7 +121,7 @@ class _Environment:
             row_str = row_str.replace("2", HERO_CHAR)       # replace the hero character
             row_str = row_str.replace("3", MONSTER_CHAR)    # replace the monster char
             row_str = row_str.replace("4", GOBLIN_CHAR)     # replace the goblin char
-            print("".join(row_str)) #print("".join(row_str).replace(",",""))
+            print("".join(row_str).replace(",",""))
 
     def print_monsters(self):
         """Returns a list of all the monsters in the maze."""
@@ -133,7 +133,7 @@ class _Environment:
         for goblin in self.goblin_list:
             goblin.bio()
     #The following functions exist for the sake of access inside the Hero controls.
-    def save_game(self, game):
+    def save_game(self):
         try:
             myGame.save_game()
         except:
@@ -179,7 +179,7 @@ class Game:
     def new_game(self):
         """Initiates a new game of Maze."""
 
-        print("Game start!\n")
+        print("\nGame start!\n")
 
         self._difficulty = input("Difficulties:\n"
             "Easy (0): Monsters are weak and have low chance of attacking you, low risks. Goblins are generous and reliable.\n"
@@ -207,16 +207,20 @@ class Game:
 
     def save_game(self):
         """Saves the game to a pre-determined file."""
-        print("Saving game... ")
         with open("game_data.dat","wb") as file:
+            print("Saving game... ")
             dump([self.myHero,self.MyEnvironment,self._count,self._difficulty],file)
         return
 
     def load_game(self):
         """Loads the game from a pre-determined file."""
-        print("Loading game... ")
-        with open("game_data.dat","rb") as file:
-            self.myHero,self.MyEnvironment,self._Count,self._difficulty = load(file)
+        try:
+            with open("game_data.dat","rb") as file:
+                print("Loading game... ")
+                self.myHero,self.MyEnvironment,self._count,self._difficulty = load(file)
+        except FileNotFoundError:
+            print("\nNo game file found, initialising new game instead...\n")
+            self.new_game() 
         return
     
     def quit_game(self):
@@ -256,15 +260,16 @@ class Game:
 
     def show_leaderboard(self):
         """Shows the leaderboard for the given difficulty."""
-        with open("leaderboards/leaderboard_{}.dat".format(self._difficulty),"r") as file:
+        with open("leaderboards/leaderboard_{}.dat".format(self._difficulty),"r+") as file:
             print(DIVIDERS)
             print("Rank","Name", "Score", sep="\t")
             for index, line in enumerate(file):
                 line = line.strip()
-                score, name = line.split(sep=",")
-                print(index+1, name.strip(), score, sep="\t")
-                if index == 9:
-                    break
+                if line != "":
+                    score, name = line.split(sep=",")
+                    print(index+1, name.strip(), score, sep="\t")
+                    if index == 9:
+                        break
         return
 
     def save_leaderboard(self):
@@ -289,12 +294,12 @@ class Game:
         """Main function for playing the game."""
 
         #First prompts the user whether they want to load from the last saved file or start a new game.
-        print("Hello World! Press L to load from your last game or N to start a New Game... ")
+        print("Hello World! Press L to load from your last game, or any other key to start a new game... ")
 
         start = getch().upper()
         if start == b"L":
             self.load_game()
-        if start == b"N":
+        else:
             self.new_game()
 
         self.MyEnvironment.print_environment()

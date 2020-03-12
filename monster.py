@@ -61,7 +61,7 @@ class fighterMonster(Monster):
     
     def set_parameters(self, mode):
         """Sets parameters according to a pre-defined array in playgame.py"""
-        difficulty = [[0.10,25],[0.25,30],[0.50,35],[0.80,40]] #EASY, NORMAL, HARD, MONSTER
+        difficulty = [[0.10,15],[0.25,20],[0.50,30],[0.80,40]] #EASY, NORMAL, HARD, MONSTER
         self._chance = difficulty[mode][0]
         self._health_reduced = difficulty[mode][1]
     
